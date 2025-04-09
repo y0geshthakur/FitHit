@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { FirebaseError } from "firebase/app";
@@ -15,6 +16,7 @@ import {
 } from "firebase/firestore";
 
 export default function LoginForm() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   type data = {
     email: string;
@@ -49,8 +51,21 @@ export default function LoginForm() {
         // console.log("User Firestore doc ID:", userDocId);
 
         // Optional: Save in localStorage, context, etc.
+        const userInfo = {
+          fname: userData.fname,
+          lname: userData.lname,
+          email: userData.email,
+          target: userData.target,
+          activity: userData.activity,
+          createdAt: userData.createdAt,
+          role: userData.role,
+          uid: user.uid,
+        };
         localStorage.setItem("userDocId", userDocId);
-        alert(`Welcome ${userData.fname} ${userData.lname}`);
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        // console.log(localStorage.getItem("userInfo"));
+        // alert(`Welcome ${userData.fname} ${userData.lname}`);
+        navigate("/account");
       } else {
         console.log("No user document found in Firestore.");
       }
