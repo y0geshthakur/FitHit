@@ -5,4 +5,6 @@ export type userData = {
   target: string;
   activity: string;
   createdAt: Date;
+  role: string;
+  uid: string;
 };

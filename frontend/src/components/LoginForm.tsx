@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import { FirebaseError } from "firebase/app";
-import { doc, getDoc } from "firebase/firestore";
-import { userData } from "../types/userData";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import ShowEye from "../assets/svgs/ShowEye";
 import HideEye from "../assets/svgs/HideEye";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,23 +33,34 @@ export default function LoginForm() {
         data.password
       );
       const user = userCredential.user;
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      const userObject = userDoc.data() as userData;
-      const userData: userData = {
-        fname: userObject.fname,
-        lname: userObject.lname,
-        email: userObject.email,
-        target: userObject.target,
-        activity: userObject.activity,
-        createdAt: userObject.createdAt,
-      };
-      alert(`Welcome ${userData.fname} ${userData.lname}`);
+
+      // 🔥 Firestore part: get userDocId using UID
+      const db = getFirestore();
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("uid", "==", user.uid));
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+        const doc = snapshot.docs[0];
+        const userData = doc.data();
+        const userDocId = doc.id;
+
+        // console.log("User data:", userData);
+        // console.log("User Firestore doc ID:", userDocId);
+
+        // Optional: Save in localStorage, context, etc.
+        localStorage.setItem("userDocId", userDocId);
+        alert(`Welcome ${userData.fname} ${userData.lname}`);
+      } else {
+        console.log("No user document found in Firestore.");
+      }
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
-        console.log("Login Error : ", error.message);
+        console.log("Login Error:", error.message);
       }
     }
   };
+
   return (
     <div className="flex flex-col justify-center w-1/2 h-full px-30 space-y-2">
       <p className="text-sm text-neutral-700">WELCOME BACK</p>

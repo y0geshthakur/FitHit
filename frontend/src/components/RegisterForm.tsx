@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { auth } from "../firebase";
 import { FirebaseError } from "firebase/app";
 import { userData } from "../types/userData";
 import { useForm } from "react-hook-form";
@@ -39,8 +38,16 @@ export default function RegisterForm() {
         target: data.target,
         activity: data.activity,
         createdAt: new Date(),
+        role: "user",
+        uid: user.uid,
       };
-      await setDoc(doc(db, "users", user.uid), userData);
+      await fetch("http://127.0.0.1:5001/fitbit-ef69d/us-central1/api/user/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
       alert("Registered");
       reset();
     } catch (error: unknown) {

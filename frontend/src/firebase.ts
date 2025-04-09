@@ -14,7 +14,7 @@ const firebaseConfig = {
   storageBucket: "fitbit-ef69d.firebasestorage.app",
   messagingSenderId: "71339500138",
   appId: "1:71339500138:web:64770d04eae264c666e013",
-  measurementId: "G-C6E5GYZ1TR"
+  measurementId: "G-C6E5GYZ1TR",
 };
 
 // Initialize Firebase
