@@ -51,21 +51,22 @@ export default function LoginForm() {
         // console.log("User Firestore doc ID:", userDocId);
 
         // Optional: Save in localStorage, context, etc.
-        const userInfo = {
-          fname: userData.fname,
-          lname: userData.lname,
-          email: userData.email,
-          target: userData.target,
-          activity: userData.activity,
-          createdAt: userData.createdAt,
-          role: userData.role,
-          uid: user.uid,
-        };
+        // const userInfo = {
+        //   fname: userData.fname,
+        //   lname: userData.lname,
+        //   email: userData.email,
+        //   target: userData.target,
+        //   activity: userData.activity,
+        //   createdAt: userData.createdAt,
+        //   role: userData.role,
+        //   uid: user.uid,
+        // };
         localStorage.setItem("userDocId", userDocId);
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        localStorage.setItem("userInfo", JSON.stringify(userData));
         // console.log(localStorage.getItem("userInfo"));
         // alert(`Welcome ${userData.fname} ${userData.lname}`);
-        navigate("/account");
+        // console.log("Login done");
+        navigate(`/account/${userData.role}`);
       } else {
         console.log("No user document found in Firestore.");
       }

@@ -38,7 +38,7 @@ export default function RegisterForm() {
         target: data.target,
         activity: data.activity,
         createdAt: new Date(),
-        role: "user",
+        role: "client",
         uid: user.uid,
       };
       await fetch("http://127.0.0.1:5001/fitbit-ef69d/us-central1/api/user/", {
